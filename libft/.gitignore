@@ -1,0 +1,6 @@
+script_test.sh
+*.a
+*.o
+main.c
+/.vscode
+ni_*
