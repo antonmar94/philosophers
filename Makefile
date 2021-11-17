@@ -4,6 +4,7 @@ LIBFT_NAME = libft.a
 SRCS = ./src/philosophers.c \
 		./src/philosophers_utils.c \
 		./src/philosophers_functions.c \
+		./src/philosophers_actions.c \
 
 OBJS = ${SRCS:.c=.o}
 LIBFT_DIR = ./libft/

@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 12:01:59 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/16 10:21:55 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/17 15:59:36 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_philosopher	*create_phil(char **argv)
 	philosopher = (t_philosopher *)malloc(sizeof(t_philosopher));
 	if (!philosopher)
 		return (NULL);
+	pthread_mutex_init(&(philosopher->right_fork), NULL);
 	philosopher->time_to_die = ft_atoi(argv[2]);
 	philosopher->time_to_eat = ft_atoi(argv[3]);
 	philosopher->time_to_sleep = ft_atoi(argv[4]);
@@ -77,4 +78,13 @@ void	del_function(t_philist *list)
 		free (list);
 		list = aux->next;
 	}
+}
+
+float	ft_difftime(struct timeval *start, struct timeval *end) //revisar esto
+{
+	float res;
+	printf("%i\n", start->tv_usec);
+	printf("%i\n", end->tv_usec);
+	res = (end->tv_usec / 1000) - (start->tv_usec / 1000);
+	return (res);
 }
