@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 12:01:59 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/17 15:59:36 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/18 18:25:58 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,21 @@ int	ft_parse_string(char *str)
 	return (1);
 }
 
-int	ft_test_error(char **argv)
+int	ft_test_error(int argc, char **argv)
 {
 	argv++;
+	if (argc < 5 || argc > 6)
+	{
+		write(1, "Error, wrong number of arguments\n", 34);
+		return (0);
+	}
 	while (*argv)
 	{
 		if (!ft_parse_string(*argv))
+		{
+			write(1, "Error, wrong argument\n", 25);
 			return (0);
+		}
 		argv++;
 	}
 	return (1);
@@ -43,7 +51,9 @@ t_philosopher	*create_phil(char **argv)
 	if (!philosopher)
 		return (NULL);
 	pthread_mutex_init(&(philosopher->right_fork), NULL);
+	philosopher->time = 0;
 	philosopher->time_to_die = ft_atoi(argv[2]);
+	philosopher->time_left = philosopher->time_to_die;
 	philosopher->time_to_eat = ft_atoi(argv[3]);
 	philosopher->time_to_sleep = ft_atoi(argv[4]);
 	if (!argv[5])
@@ -75,16 +85,18 @@ void	del_function(t_philist *list)
 	while (list)
 	{
 		aux = list;
+		pthread_mutex_destroy(&(aux->philosopher->right_fork));
 		free (list);
 		list = aux->next;
 	}
 }
 
-float	ft_difftime(struct timeval *start, struct timeval *end) //revisar esto
+int	ft_difftime(struct timeval *start, struct timeval *end)
 {
-	float res;
-	printf("%i\n", start->tv_usec);
-	printf("%i\n", end->tv_usec);
-	res = (end->tv_usec / 1000) - (start->tv_usec / 1000);
+	int res;
+	//printf("%i\n", start->tv_usec);
+	//printf("%i\n", end->tv_usec);
+	res = (end->tv_sec - start->tv_sec) * 1000;
+	//printf("%f\n", res);
 	return (res);
 }

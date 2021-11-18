@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 09:10:37 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/17 17:25:35 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/18 14:59:27 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,22 @@ t_philist	*create_plist(char **argv, int size)
 	list_init->prev = list;
 	asign_parity(list, size);
 	return (list_init);
+}
+
+int		ft_plist_size(t_philist *plist)
+{
+	t_philist	*aux;
+	int			tam;
+
+	tam = 0;
+	aux = plist;
+	aux = aux->next;
+	while (aux->philosopher->number != plist->philosopher->number)
+	{
+		aux = aux->next;
+		tam++;
+	}
+	return (tam);
 }
 
 void	print_plist(t_philist *plist, int size)
