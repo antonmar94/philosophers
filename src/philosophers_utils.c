@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 12:01:59 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/18 18:25:58 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/19 16:46:26 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,12 @@ void	del_function(t_philist *list)
 	}
 }
 
-int	ft_difftime(struct timeval *start, struct timeval *end)
+float	ft_difftime(struct timeval *start, struct timeval *end)
 {
-	int res;
-	//printf("%i\n", start->tv_usec);
-	//printf("%i\n", end->tv_usec);
-	res = (end->tv_sec - start->tv_sec) * 1000;
-	//printf("%f\n", res);
+	float res;
+
+	res = 0;
+	res = ((end->tv_sec * 1000) + (end->tv_usec / 1000))
+	- ((start->tv_sec * 1000) + (start->tv_usec / 1000));
 	return (res);
 }
