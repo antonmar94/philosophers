@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 12:01:59 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/19 16:46:26 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/22 14:02:14 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ t_philosopher	*create_phil(char **argv)
 	pthread_mutex_init(&(philosopher->right_fork), NULL);
 	philosopher->time = 0;
 	philosopher->time_to_die = ft_atoi(argv[2]);
-	philosopher->time_left = philosopher->time_to_die;
+	philosopher->count = philosopher->time_to_die;
+	philosopher->time_left = &philosopher->count;
 	philosopher->time_to_eat = ft_atoi(argv[3]);
 	philosopher->time_to_sleep = ft_atoi(argv[4]);
 	if (!argv[5])
@@ -76,19 +77,6 @@ t_philist	*create_pnode(char **argv)
 	list->next = NULL;
 	list->prev = NULL;
 	return (list);
-}
-
-void	del_function(t_philist *list)
-{
-	t_philist	*aux;
-
-	while (list)
-	{
-		aux = list;
-		pthread_mutex_destroy(&(aux->philosopher->right_fork));
-		free (list);
-		list = aux->next;
-	}
 }
 
 float	ft_difftime(struct timeval *start, struct timeval *end)

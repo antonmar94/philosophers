@@ -6,66 +6,51 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 11:53:10 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/19 18:15:37 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/22 14:11:12 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void	*ft_dead_counter(void *element)
+void	*ft_counter(void *element)
 {
-	t_philosopher 	*philo;
+	t_philist 		*plist;
 	struct timeval	start;
 	struct timeval	end;
-	int				imdead;
 
-	philo = (t_philosopher *)element;
-	imdead = philo->time;
-	philo->exit = 0;
-	philo->time_left = philo->time_to_die;
-	//printf("cuenta atras %i\n", philo->time);
-	//printf("cuenta atras %i\n", philo->time_left);
-	while (philo->exit == 0)
+	plist = (t_philist *)element;
+	while (1)
 	{
 		gettimeofday(&start, NULL);
 		usleep(1000);
 		gettimeofday(&end, NULL);
-		philo->time_left -= ft_difftime(&start, &end);
-		imdead += ft_difftime(&start, &end);
-		//printf("cuenta atras %i", philo->time_left);
-		//printf("cuenta atras %i", philo->time_left);
-
-		//printf("cuenta atras %i\n", philo->time);
-		if (philo->time_left <= 0)
-		{
-			printf("\033[0m%i \033[0;35mPhilosopher %i died\n",
-			imdead, philo->number);
-			exit(0);
-		}
+		*plist->philosopher->time_left -= ft_difftime(&start, &end);
+		plist->philosopher->time += ft_difftime(&start, &end);
+		if (*plist->philosopher->time_left <= 0)
+			ft_die(plist);
 	}
 	return (NULL);
 }
 
 int	main(int argc, char **argv)
-{ 
-	t_philist			*list;
+{
+	t_philist			*plist;
 	pthread_t			philosopher;
+	pthread_t			time_pth;
 	int					i;
 	int					size;
 
 	i = 0;
+	
 	if (!ft_test_error(argc, argv))
 		exit (-1);
 	size = ft_atoi(argv[1]);
-	list = create_plist(argv, size);
-	print_plist(list, size);
+	plist = create_plist(argv, size);
+	print_plist(plist, size);
 	while (i < size)
 	{
-		if (list->philosopher->turn)
-			pthread_create(&philosopher, NULL, ft_phil_turnthread, list);
-		else
-			pthread_create(&philosopher, NULL, ft_phil_no_turnthread, list);
-		list = list->next;
+		pthread_create(&philosopher, NULL, ft_phil_turnthread, plist);
+		plist = plist->next;
 		i++;
 	}
 	pthread_join(philosopher, NULL);

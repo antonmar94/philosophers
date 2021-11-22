@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 12:44:07 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/19 18:28:13 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/22 13:56:49 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,78 +17,46 @@ void	*ft_phil_turnthread(void *element)
 	t_philist 	*plist;
 
 	plist = (t_philist *)element;
-	pthread_create(&plist->philosopher->phil_die, NULL, ft_dead_counter, plist->philosopher);
-	ft_take_rightfork(plist);
+	pthread_create(&plist->philosopher->phil_die, NULL, ft_counter, plist);
+	ft_think(plist);
 	return (NULL);
 }
 
-void	*ft_phil_no_turnthread(void *element)
-{
-	t_philist 	*plist;
-
-	plist = (t_philist *)element;
-	pthread_create(&plist->philosopher->phil_die, NULL, ft_dead_counter, plist->philosopher);
-	ft_sleep(plist);
-	return (NULL);
-}
-
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
 void	ft_take_rightfork(void *thread)
 {
-	struct timeval	start;
-	struct timeval	end;
 	t_philist 	*plist;
 
 	plist = (t_philist *)thread;
-	gettimeofday(&start, NULL);
-	//pthread_create(&plist->philosopher->phil_die->thread_left, NULL, ft_dead_counter, plist->philosopher);
 	pthread_mutex_lock(&(plist->philosopher->right_fork));
-	gettimeofday(&end, NULL);
-	plist->philosopher->time += ft_difftime(&start, &end);
-	printf("\033[0m%i \033[0;32mPhilosopher %i has taken a fork\n",
+	printf("%i \033[0;32mPhilosopher %i has taken a fork\n\033[0m",
 	plist->philosopher->time, plist->philosopher->number);
 	ft_take_leftfork(plist);
+	
 }
 
 void	ft_take_leftfork(void *thread)
 {
-	struct timeval	start;
-	struct timeval	end;
 	t_philist 	*plist;
 
 	plist = (t_philist *)thread;
-	gettimeofday(&start, NULL);
-	//pthread_create(&plist->philosopher->phil_die->thread_left, NULL, ft_dead_counter, plist->philosopher);
+	printf("%i \033[0;36mPhilosopher %i is thinking\n\033[0m",
+	plist->philosopher->time, plist->philosopher->number);
+	plist->philosopher->turn = 0;
 	pthread_mutex_lock(&(plist->prev->philosopher->right_fork));
-	gettimeofday(&end, NULL);
-	//plist->philosopher->phil_die->time += ft_difftime(&start, &end);
-	plist->philosopher->time += ft_difftime(&start, &end);
-	printf("\033[0m%i \033[0;32mPhilosopher %i has taken a fork\n",
+	printf("%i \033[0;32mPhilosopher %i has taken a fork\n\033[0m",
 	plist->philosopher->time, plist->philosopher->number);
 	ft_eat(plist);
 }
 
 void	ft_eat(void *thread)
 {
-	struct timeval	start;
-	struct timeval	end;
 	static	int		philo_fed;
-	t_philist 	*plist;
+	t_philist 		*plist;
 
 	plist = (t_philist *)thread;
-	printf("\033[0m%i \033[0;33mPhilosopher %i is eating\n",
+	printf("%i \033[0;33mPhilosopher %i is eating\n\033[0m",
 	plist->philosopher->time, plist->philosopher->number);
-	gettimeofday(&start, NULL);
-	//plist->philosopher->time_left = plist->philosopher->time_to_die;
-	//pthread_detach(plist->philosopher->phil_die->thread_left);
-	//plist->philosopher->phil_die->time_left = plist->philosopher->time_to_die;
-	plist->philosopher->time_left = plist->philosopher->time_to_die;
-	plist->philosopher->exit = 1;
-	//pthread_create(&plist->philosopher->phil_die, NULL, ft_dead_counter, plist->philosopher);
+	*plist->philosopher->time_left = plist->philosopher->time_to_die;
 	usleep(plist->philosopher->time_to_eat * 1000);
 	plist->philosopher->number_of_times_toeat--;
 	if (plist->philosopher->number_of_times_toeat == 0)
@@ -97,37 +65,33 @@ void	ft_eat(void *thread)
 		exit(0);
 	pthread_mutex_unlock(&(plist->philosopher->right_fork));
 	pthread_mutex_unlock(&(plist->prev->philosopher->right_fork));
-	gettimeofday(&end, NULL);
-	plist->philosopher->time += ft_difftime(&start, &end);
 	ft_sleep(plist);
 }
 
 void	ft_sleep(void *thread)
 {
-	struct timeval	start;
-	struct timeval	end;
-	int				i;
 	t_philist 	*plist;
 
 	plist = (t_philist *)thread;
-	i = 0;
-	printf("\033[0m%i \033[0;34mPhilosopher %i is sleeping\n",
+	printf("%i \033[0;34mPhilosopher %i is sleeping\n\033[0m",
 	plist->philosopher->time, plist->philosopher->number);
-	gettimeofday(&start, NULL);
+	plist->philosopher->turn = 1;
 	usleep(plist->philosopher->time_to_sleep * 1000);
-	gettimeofday(&end, NULL);
-	plist->philosopher->time += ft_difftime(&start, &end);
 	ft_think(plist);
 }
 
-void	ft_think(void *thread)
+void	*ft_think(void *thread)
 {
 	t_philist 	*plist;
 
 	plist = (t_philist *)thread;
-	printf("\033[0m%i \033[0;36mPhilosopher %i is thinking\n",
+	printf("%i \033[0;36mPhilosopher %i is thinking\n\033[0m",
 	plist->philosopher->time, plist->philosopher->number);
-	ft_phil_turnthread(&plist->philosopher);
+	if (plist->philosopher->turn)
+		ft_take_rightfork(plist);
+	else
+		ft_sleep(plist);
+	return (NULL);
 }
 
 void	kill_them_all(void *thread)
@@ -144,7 +108,8 @@ void	ft_die(void *thread)
 	t_philist 	*plist;
 
 	plist = (t_philist *)thread;
-	printf("\033[0m%i \033[0;35mPhilosopher %i died\n",
+	printf("%i \033[0;35mPhilosopher %i died\n\033[0m",
 	plist->philosopher->time, plist->philosopher->number);
 	kill_them_all(thread);
+	exit (0);
 }

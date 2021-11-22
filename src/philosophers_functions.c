@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 09:10:37 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/19 12:19:45 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/22 13:56:45 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_philist	*create_plist(char **argv, int size)
 	t_philist		*list_init;
 	t_philist		*aux;
 	int				i;
+	int				esto;
 
 	i = 1;
 	list = create_pnode(argv);
@@ -46,8 +47,10 @@ t_philist	*create_plist(char **argv, int size)
 	}
 	list->next = list_init;
 	list_init->prev = list;
+	esto = list->philosopher->time_to_die;
 	asign_parity(list, size);
-	return (list_init);
+	list = list->next;
+	return (list);
 }
 
 int		ft_plist_size(t_philist *plist)
@@ -69,8 +72,10 @@ int		ft_plist_size(t_philist *plist)
 void	print_plist(t_philist *plist, int size)
 {
 	int	i;
+	t_philist *aux;
 
 	i = 0;
+	aux = plist;
 	printf("\n");
 	printf("\033[0;31m%65s", " 📚 Philosophers 📚 ");
 	printf("\n");
@@ -80,17 +85,17 @@ void	print_plist(t_philist *plist, int size)
 	{
 		printf("\033[0mPhilosopher %-3i", i + 1);
 		printf("\033[0;32mnumber: \033[0m%-3i",
-			plist->philosopher->number);
-		printf("\033[0;35mtime to die: \033[0m[%i] ",
-			plist->philosopher->time_to_die);
+			aux->philosopher->number);
+		printf("\033[0;35mtime to die: \033[0m[%d] ",
+			aux->philosopher->time_to_die);
 		printf("\033[0;33mtime to eat: \033[0m[%i] ",
-			plist->philosopher->time_to_eat);
+			aux->philosopher->time_to_eat);
 		printf("\033[0;34mtime to sleep: \033[0m[%i] ",
-			plist->philosopher->time_to_sleep);
+			aux->philosopher->time_to_sleep);
 		printf("\033[0;36mnumber of times to eat: \033[0m[%i] ",
-			plist->philosopher->number_of_times_toeat);
+			aux->philosopher->number_of_times_toeat);
 		printf("\n");
-		plist = plist->next;
+		aux = aux->next;
 		i++;
 	}
 }
