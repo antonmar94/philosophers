@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 10:19:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/22 14:02:23 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/24 19:39:48 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 # define PHILOSOPHERS_H
 # include <stdio.h>
-# include "../libft/libft.h"
 # include <stdlib.h>
 # include <unistd.h>
 # include <pthread.h>
@@ -30,12 +29,12 @@ typedef struct philosopher
 	int				time;		
 	int				time_to_die;
 	pthread_t		phil_die;
+	time_t 			start;
 	int				*time_left;
 	int				count;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				number_of_times_toeat;
-	int				exit;
 }	t_philosopher;
 typedef struct philosopher_list
 {
@@ -54,12 +53,16 @@ void			ft_take_leftfork(void *thread);
 void			ft_eat(void *thread);
 void			ft_sleep(void *thread);
 void			*ft_think(void *thread);
-void			ft_die(void *thread);
+void			*ft_die(void *thread);
 void			*ft_phil_turnthread(void *element);
 void			*ft_phil_no_turnthread(void *element);
 float			ft_difftime(struct timeval *start, struct timeval *end);
 void			kill_them_all(void *thread);
 void			*ft_counter(void *element);
 void			asign_parity(t_philist *plist, int size);
+void			ft_printer(t_philist *plist, char *str1, char *str2);
+int				ft_atoi(const char *str);
+int				ft_isdigit(int c);
+time_t			ft_thistime(void);
 
 #endif        
