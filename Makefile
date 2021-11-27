@@ -5,7 +5,7 @@ SRCS = ./src/philosophers.c \
 		./src/philosophers_functions.c \
 		./src/philosophers_actions.c \
 		./src/philosophers_list_utils.c \
-		./src/philosophers_time_utils.c \
+		./src/philosophers_time_utils.c
 
 OBJS = ${SRCS:.c=.o}
 CC = cc
