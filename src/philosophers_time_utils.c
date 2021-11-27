@@ -1,41 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers.c                                     :+:      :+:    :+:   */
+/*   philosophers_time_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/15 11:53:10 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/27 18:04:42 by antonmar         ###   ########.fr       */
+/*   Created: 2021/11/26 19:49:37 by antonmar          #+#    #+#             */
+/*   Updated: 2021/11/27 18:02:09 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-int	main(int argc, char **argv)
+time_t	ft_thistime(void)
 {
-	t_philist			*plist;
-	pthread_t			philosopher;
-	int					i;
-	int					size;
+	struct timeval	start;
+
+	gettimeofday(&start, NULL);
+	return ((start.tv_sec * 1000) + (start.tv_usec / 1000));
+}
+
+void	ft_usleep(t_philist *plist, int time)
+{
+	int	this_time;
+
+	this_time = ft_thistime() - plist->philosopher->start;
+	while (ft_thistime() - plist->philosopher->start < this_time + time)
+		usleep(100);
+}
+
+void	start_time(t_philist *plist, int size)
+{
+	int	i;
 
 	i = 0;
-	if (!ft_test_error(argc, argv))
-		return (-1);
-	size = ft_atoi(argv[1]);
-	if (!size)
-		return (-1);
-	plist = create_plist(argv, size);
-	plist->philosopher->start = ft_thistime();
-	start_time(plist, size);
 	while (i < size)
 	{
-		pthread_create(&philosopher, NULL, ft_think, plist);
+		plist->next->philosopher->start = plist->philosopher->start;
 		plist = plist->next;
 		i++;
 	}
-	if (ft_checker(plist, philosopher) == 0)
-		return (0);
-	pthread_join(philosopher, NULL);
-	return (0);
 }

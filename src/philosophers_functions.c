@@ -6,96 +6,108 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 09:10:37 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/24 19:52:52 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/27 18:00:10 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void	asign_parity(t_philist *plist, int size)
+void	ft_printer(t_philist *plist, char *str1, char *str2, int ded)
 {
-	while (size)
+	static pthread_mutex_t	printing = PTHREAD_MUTEX_INITIALIZER;
+	static int				noprint;
+
+	if (!noprint)
 	{
-		if (plist->philosopher->number % 2 != 0)
-			plist->philosopher->turn = 1;
-		else
-			plist->philosopher->turn = 0;
-		plist = plist->next;
-		size--;
+		pthread_mutex_lock(&printing);
+		if (!noprint)
+		{
+			printf("%li ", ft_thistime() - plist->philosopher->start);
+			printf("%s %i", str1, plist->philosopher->number);
+			printf(" %s\n\033[0m", str2);
+			if (ded)
+			{
+				noprint = 1;
+				pthread_mutex_destroy(&printing);
+			}
+			pthread_mutex_unlock(&printing);
+		}
 	}
 }
 
-t_philist	*create_plist(char **argv, int size)
+int	ft_diechecker(t_philist *plist)
 {
-	t_philist		*list;
-	t_philist		*list_init;
-	t_philist		*aux;
+	t_philist	*p_init;
+
+	p_init = plist;
+	if (p_init->philosopher->dead == 1)
+		return (1);
+	p_init = p_init->next;
+	while (p_init->philosopher->number != plist->philosopher->number)
+	{
+		if (p_init->philosopher->dead == 1)
+			return (1);
+		p_init = p_init->next;
+	}
+	return (0);
+}
+
+int	ft_eatchecker(t_philist *plist)
+{
+	t_philist	*p_init;
+
+	p_init = plist;
+	if (p_init->philosopher->numeat == 0)
+		return (0);
+	if (p_init->philosopher->number_of_times_toeat > 0)
+		return (0);
+	p_init = p_init->next;
+	while (p_init->philosopher->number != plist->philosopher->number)
+	{
+		if (p_init->philosopher->number_of_times_toeat > 0)
+			return (0);
+		p_init = p_init->next;
+	}
+	return (1);
+}
+
+int	ft_killp(t_philist *plist, pthread_t philosopher)
+{
+	if (*plist->philosopher->time_left
+		>= plist->philosopher->time_to_die)
+	{
+		plist->philosopher->dead = 1;
+		pthread_detach(philosopher);
+		ft_printer(plist, "\033[0;35mPhilosopher", "died", 1);
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_checker(t_philist *plist, pthread_t philosopher)
+{
+	time_t			start;
+	time_t			sum;
+	int				size;
 	int				i;
-	int				esto;
 
-	i = 1;
-	list = create_pnode(argv);
-	list->philosopher->number = 1;
-	list_init = list;
-	while (++i <= size)
+	size = ft_plist_size(plist);
+	while (1)
 	{
-		list->next = create_pnode(argv);
-		aux = list;
-		list = list->next;
-		list->prev = aux;
-		list->philosopher->number = i;
+		start = ft_thistime();
+		ft_usleep(plist, 1);
+		sum = ft_thistime() - start;
+		i = 0;
+		while (i < size)
+		{
+			*plist->philosopher->time_left += sum;
+			if (ft_killp(plist, philosopher) == 1)
+				return (0);
+			if (ft_eatchecker(plist))
+				return (0);
+			plist = plist->next;
+			i++;
+		}
 	}
-	list->next = list_init;
-	list_init->prev = list;
-	esto = list->philosopher->time_to_die;
-	asign_parity(list, size);
-	list = list->next;
-	return (list);
-}
-
-int		ft_plist_size(t_philist *plist)
-{
-	t_philist	*aux;
-	int			tam;
-
-	tam = 0;
-	aux = plist;
-	aux = aux->next;
-	while (aux->philosopher->number != plist->philosopher->number)
-	{
-		aux = aux->next;
-		tam++;
-	}
-	return (tam);
-}
-
-void	print_plist(t_philist *plist, int size)
-{
-	int	i;
-	t_philist *aux;
-
-	i = 0;
-	aux = plist;
-	printf("\n");
-	printf("\033[0;31m%65s", " 📚 Philosophers 📚 ");
-	printf("\n");
-	printf("\033[0;31m%57s", "------------");
-	printf("\n");
-	while (i < size)
-	{
-		printf("\033[0mPhilosopher %-3i", i + 1);
-		printf("\033[0;32mnumber: \033[0m%-3i",
-			aux->philosopher->number);
-		printf("\033[0;35mtime to die: \033[0m[%d] ",
-			aux->philosopher->time_to_die);
-		printf("\033[0;33mtime to eat: \033[0m[%i] ",
-			aux->philosopher->time_to_eat);
-		printf("\033[0;34mtime to sleep: \033[0m[%i] ",
-			aux->philosopher->time_to_sleep);
-		printf("\033[0;36mnumber of times to eat: \033[0m[%i] ",
-			aux->philosopher->number_of_times_toeat);
-		printf("\n");
-		aux = aux->next;
-		i++;
-	}
+	return (1);
 }

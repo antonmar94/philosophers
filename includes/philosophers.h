@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 10:19:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/24 19:39:48 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/27 18:03:20 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@
 typedef struct philosopher
 {
 	int				number;
+	int				numeat;
 	int				turn;
 	pthread_mutex_t	right_fork;
-	int				time;		
+	int				dead;
 	int				time_to_die;
 	pthread_t		phil_die;
-	time_t 			start;
+	time_t			start;
 	int				*time_left;
 	int				count;
 	int				time_to_eat;
@@ -42,27 +43,27 @@ typedef struct philosopher_list
 	struct philosopher_list	*next;
 	struct philosopher_list	*prev;
 }	t_philist;
-int				ft_test_error(int argc, char **argv);
+
 t_philosopher	*create_phil(char **argv);
 t_philist		*create_pnode(char **argv);
 t_philist		*create_plist(char **argv, int size);
 void			print_plist(t_philist *plist, int size);
-int				ft_plist_size(t_philist *plist);
-void			ft_take_rightfork(void *thread);
-void			ft_take_leftfork(void *thread);
-void			ft_eat(void *thread);
-void			ft_sleep(void *thread);
+void			asign_turn(t_philist *plist, int size);
+void			*ft_takefork(void *thread);
+void			*ft_eat(void *thread);
+void			*ft_sleep(void *thread);
 void			*ft_think(void *thread);
-void			*ft_die(void *thread);
-void			*ft_phil_turnthread(void *element);
-void			*ft_phil_no_turnthread(void *element);
-float			ft_difftime(struct timeval *start, struct timeval *end);
-void			kill_them_all(void *thread);
+time_t			ft_thistime(void);
+void			start_time(t_philist *plist, int size);
+void			ft_usleep(t_philist *plist, int time);
+int				ft_eatchecker(t_philist *plist);
+int				ft_diechecker(t_philist *plist);
+int				ft_checker(t_philist *plist, pthread_t philosopher);
+void			ft_printer(t_philist *plist, char *str1, char *str2, int ded);
 void			*ft_counter(void *element);
-void			asign_parity(t_philist *plist, int size);
-void			ft_printer(t_philist *plist, char *str1, char *str2);
+int				ft_test_error(int argc, char **argv);
 int				ft_atoi(const char *str);
 int				ft_isdigit(int c);
-time_t			ft_thistime(void);
+int				ft_plist_size(t_philist *plist);
 
 #endif        
