@@ -38,7 +38,7 @@ void	*ft_eat(void *thread)
 	t_philist	*plist;
 
 	plist = (t_philist *)thread;
-	ft_printer(plist, "\033[0;33mPhilosopher", "is eating", 0);
+	ft_printer(plist, "\033[0;33mPhilosopher", "is eating 🍝", 0);
 	*plist->philo->time_left = 0;
 	plist->philo->number_of_times_toeat--;
 	if (dead_counter(plist, thread, plist->philo->time_to_eat) == 0)
@@ -60,7 +60,7 @@ void	*ft_sleep(void *thread)
 	t_philist	*plist;
 
 	plist = (t_philist *)thread;
-	ft_printer(plist, "\033[0;34mPhilosopher", "is sleeping", 0);
+	ft_printer(plist, "\033[0;34mPhilosopher", "is sleeping 😴", 0);
 	if (!dead_counter(plist, thread, plist->philo->time_to_sleep))
 		return (NULL);
 	ft_think(plist);
@@ -72,7 +72,7 @@ void	*ft_think(void *thread)
 	t_philist				*plist;
 
 	plist = (t_philist *)thread;
-	ft_printer(plist, "\033[0;36mPhilosopher", "is thinking", 0);
+	ft_printer(plist, "\033[0;36mPhilosopher", "is thinking 🤔", 0);
 	ft_takefork(plist);
 	return (NULL);
 }

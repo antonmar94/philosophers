@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 19:43:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/29 16:28:12 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/29 18:09:35 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 void	asign_turn(t_philist *plist, int size)
 {
-	int	nolast;
-
-	nolast = 0;
-	if (size % 2 != 0 && size != 1)
-		nolast = 1;
 	while (size)
 	{
 		if (plist->philo->number % 2 != 0)
@@ -28,8 +23,6 @@ void	asign_turn(t_philist *plist, int size)
 		plist = plist->next;
 		size--;
 	}
-	if (nolast)
-		plist->philo->turn = 0;
 }
 
 t_fork	*create_fork(void)
