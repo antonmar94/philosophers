@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 19:43:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/28 19:29:17 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:05:44 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ t_philosopher	*create_phil(char **argv)
 	philosopher->time_left = &philosopher->count;
 	philosopher->time_to_eat = ft_atoi(argv[3]);
 	philosopher->time_to_sleep = ft_atoi(argv[4]);
-	philosopher->has_eaten = 0;
-	philosopher->has_sleep = 0;
-	philosopher->forks_taken = 0;
 	if (!argv[5])
 	{
 		philosopher->numeat = 0;

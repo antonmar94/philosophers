@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 10:19:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/28 19:56:21 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:05:03 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,6 @@ typedef struct philosopher
 	int				number;
 	int				numeat;
 	int				turn;
-	int				forks_taken;
-	int				has_eaten;
-	int				has_sleep;
 	t_fork			*right_fork;
 	int				dead;
 	int				time_to_die;

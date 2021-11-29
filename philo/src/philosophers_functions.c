@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 09:10:37 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/28 19:54:26 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:05:35 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ void	ft_take_leftfork(t_philist *plist)
 	{
 		ft_printer(plist, "\033[0;32mPhilosopher", "has taken a fork", 0);
 		plist->prev->philosopher->right_fork->taken++;
-		plist->philosopher->forks_taken++;
 	}
 	pthread_mutex_unlock(&plist->prev->philosopher->right_fork->mutex_fork);
 }
@@ -95,7 +94,6 @@ void	ft_take_rightfork(t_philist *plist)
 	{
 		ft_printer(plist, "\033[0;32mPhilosopher", "has taken a fork", 0);
 		plist->philosopher->right_fork->taken++;
-		plist->philosopher->forks_taken++;
 	}
 	pthread_mutex_unlock(&plist->philosopher->right_fork->mutex_fork);
 }
