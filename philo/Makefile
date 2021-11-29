@@ -1,11 +1,11 @@
 
 NAME = philo
-SRCS = ./src/philosophers.c \
-		./src/philosophers_utils.c \
-		./src/philosophers_functions.c \
-		./src/philosophers_actions.c \
-		./src/philosophers_list_utils.c \
-		./src/philosophers_time_utils.c
+SRCS = ./src/philo.c \
+		./src/philo_utils.c \
+		./src/philo_functions.c \
+		./src/philo_actions.c \
+		./src/philo_list_utils.c \
+		./src/philo_time_utils.c
 
 OBJS = ${SRCS:.c=.o}
 CC = cc

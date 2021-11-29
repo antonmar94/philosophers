@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers_time_utils.c                          :+:      :+:    :+:   */
+/*   philo_time_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../includes/philo.h"
 
 time_t	ft_thistime(void)
 {
@@ -24,12 +24,12 @@ void	ft_usleep(t_philist *plist, int time)
 {
 	int	this_time;
 
-	this_time = ft_thistime() - plist->philosopher->start;
-	while (ft_thistime() - plist->philosopher->start < this_time + time)
+	this_time = ft_thistime() - plist->philo->start;
+	while (ft_thistime() - plist->philo->start < this_time + time)
 		usleep(100);
 }
 
-int	dead_counter(t_philist *plist, pthread_t philosopher, int time)
+int	dead_counter(t_philist *plist, pthread_t philo, int time)
 {
 	int		time_over;
 	time_t	start;
@@ -41,8 +41,8 @@ int	dead_counter(t_philist *plist, pthread_t philosopher, int time)
 		start = ft_thistime();
 		ft_usleep(plist, 1);
 		sum = ft_thistime() - start;
-		*plist->philosopher->time_left += sum;
-		if (ft_killp(plist, philosopher) == 1)
+		*plist->philo->time_left += sum;
+		if (ft_killp(plist, philo) == 1)
 			return (0);
 		time_over--;
 	}
@@ -56,13 +56,13 @@ void	start_time(t_philist *plist, int size)
 	i = 0;
 	while (i < size)
 	{
-		plist->next->philosopher->start = plist->philosopher->start;
+		plist->next->philo->start = plist->philo->start;
 		plist = plist->next;
 		i++;
 	}
 }
 
-int	ft_waiter(t_philist *plist, pthread_t philosopher, int time)
+int	ft_waiter(t_philist *plist, pthread_t philo, int time)
 {
 	int		time_over;
 	time_t	start;
@@ -74,8 +74,8 @@ int	ft_waiter(t_philist *plist, pthread_t philosopher, int time)
 		start = ft_thistime();
 		usleep(10);
 		sum = ft_thistime() - start;
-		*plist->philosopher->time_left += sum;
-		if (ft_killp(plist, philosopher) == 1)
+		*plist->philo->time_left += sum;
+		if (ft_killp(plist, philo) == 1)
 			return (0);
 		time_over--;
 	}

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosophers_utils.c                               :+:      :+:    :+:   */
+/*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 12:01:59 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/28 19:55:17 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/29 16:27:59 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../includes/philo.h"
 
 int	ft_parse_string(char *str)
 {
@@ -31,7 +31,7 @@ int	ft_plist_size(t_philist *plist)
 		return (1);
 	size = 1;
 	plist = plist->next;
-	while (plist->philosopher->number != 1)
+	while (plist->philo->number != 1)
 	{
 		size++;
 		plist = plist->next;
