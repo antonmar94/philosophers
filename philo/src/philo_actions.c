@@ -26,11 +26,14 @@ void	*ft_takefork(void *thread)
 			return (NULL);
 	}
 	pthread_mutex_unlock(&my_turn);
+	pthread_mutex_lock(&my_turn);
 	while (ft_take_rightfork(plist) == 0)
 	{
+		pthread_mutex_unlock(&my_turn);
 		if (ft_waiter(plist, thread, 10) == 0)
 			return (NULL);
 	}
+	pthread_mutex_unlock(&my_turn);
 	ft_eat(plist);
 	return (NULL);
 }
