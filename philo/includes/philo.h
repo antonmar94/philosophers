@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 10:19:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/29 18:06:23 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/30 14:42:28 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ typedef struct philo
 {
 	int				number;
 	int				numeat;
-	int				turn;
 	t_fork			*right_fork;
 	int				dead;
 	int				time_to_die;
@@ -53,7 +52,6 @@ t_philo		*create_phil(char **argv);
 t_philist	*create_pnode(char **argv);
 t_philist	*create_plist(char **argv, int size);
 void		print_plist(t_philist *plist, int size);
-void		asign_turn(t_philist *plist, int size);
 void		*ft_takefork(void *thread);
 void		*ft_eat(void *thread);
 void		*ft_sleep(void *thread);
@@ -70,7 +68,7 @@ int			ft_plist_size(t_philist *plist);
 int			ft_eatchecker(t_philist *plist);
 int			ft_finisher(t_philist *plist, pthread_t philo);
 int			ft_killp(t_philist *plist, pthread_t philo);
-void		ft_take_leftfork(t_philist *plist);
-void		ft_take_rightfork(t_philist *plist);
+int			ft_take_leftfork(t_philist *plist);
+int			ft_take_rightfork(t_philist *plist);
 
 #endif        

@@ -6,24 +6,11 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 19:43:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/29 18:09:35 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/11/30 14:41:48 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
-
-void	asign_turn(t_philist *plist, int size)
-{
-	while (size)
-	{
-		if (plist->philo->number % 2 != 0)
-			plist->philo->turn = 1;
-		else
-			plist->philo->turn = 0;
-		plist = plist->next;
-		size--;
-	}
-}
 
 t_fork	*create_fork(void)
 {
@@ -82,7 +69,6 @@ t_philist	*create_plist(char **argv, int size)
 	t_philist		*list_init;
 	t_philist		*aux;
 	int				i;
-	int				esto;
 
 	i = 1;
 	list = create_pnode(argv);
@@ -98,8 +84,35 @@ t_philist	*create_plist(char **argv, int size)
 	}
 	list->next = list_init;
 	list_init->prev = list;
-	esto = list->philo->time_to_die;
-	asign_turn(list, size);
 	list = list->next;
 	return (list);
+}
+
+void	print_plist(t_philist *plist, int size)
+{
+	int			i;
+	t_philist	*aux;
+
+	i = 0;
+	aux = plist;
+	printf("\n");
+	printf("\033[0;31m%65s", " 📚 philo 📚 ");
+	printf("\n");
+	printf("\033[0;31m%57s", "------------\n");
+	while (i < size)
+	{
+		printf("\033[0mphilo %-3i", i + 1);
+		printf("\033[0;32mnumber: \033[0m%-3i",
+			aux->philo->number);
+		printf("\033[0;35mtime to die: \033[0m[%d] ",
+			aux->philo->time_to_die);
+		printf("\033[0;33mtime to eat: \033[0m[%i] ",
+			aux->philo->time_to_eat);
+		printf("\033[0;34mtime to sleep: \033[0m[%i] ",
+			aux->philo->time_to_sleep);
+		printf("\033[0;36mnumber of times to eat: \033[0m[%i]\n ",
+			aux->philo->number_of_times_toeat);
+		aux = aux->next;
+		i++;
+	}
 }
