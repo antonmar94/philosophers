@@ -12,6 +12,35 @@
 
 #include "../includes/philo.h"
 
+void	print_plist(t_philist *plist, int size)
+{
+	int			i;
+	t_philist	*aux;
+
+	i = 0;
+	aux = plist;
+	printf("\n");
+	printf("\033[0;31m%65s", " 📚 philo 📚 ");
+	printf("\n");
+	printf("\033[0;31m%57s", "------------\n");
+	while (i < size)
+	{
+		printf("\033[0mphilo %-3i", i + 1);
+		printf("\033[0;32mnumber: \033[0m%-3i",
+			aux->philo->number);
+		printf("\033[0;35mtime to die: \033[0m[%d] ",
+			aux->philo->time_to_die);
+		printf("\033[0;33mtime to eat: \033[0m[%i] ",
+			aux->philo->time_to_eat);
+		printf("\033[0;34mtime to sleep: \033[0m[%i] ",
+			aux->philo->time_to_sleep);
+		printf("\033[0;36mnumber of times to eat: \033[0m[%i]\n ",
+			aux->philo->number_of_times_toeat);
+		aux = aux->next;
+		i++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_philist			*plist;

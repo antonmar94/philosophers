@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/15 12:01:59 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/30 14:39:12 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/12/01 12:53:52 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,18 @@ int	ft_parse_string(char *str)
 
 int	ft_plist_size(t_philist *plist)
 {
-	int	size;
+	int			size;
+	t_philist	*aux;
 
-	if (!plist->next)
+	aux = plist;
+	if (!aux->next)
 		return (1);
 	size = 1;
-	plist = plist->next;
-	while (plist->philo->number != 1)
+	aux = aux->next;
+	while (aux->philo->number != plist->philo->number)
 	{
 		size++;
-		plist = plist->next;
+		aux = aux->next;
 	}
 	return (size);
 }

@@ -15,25 +15,24 @@
 void	*ft_takefork(void *thread)
 {
 	t_philist				*plist;
-	static pthread_mutex_t	my_turn = PTHREAD_MUTEX_INITIALIZER;
+	static pthread_mutex_t	turn = PTHREAD_MUTEX_INITIALIZER;
 
 	plist = (t_philist *)thread;
-	pthread_mutex_lock(&my_turn);
-	while (ft_take_leftfork(plist) == 0)
+	while (plist->philo->forks_taken != 2)
 	{
-		pthread_mutex_unlock(&my_turn);
+		if (plist->philo->number % 2 == 0 && plist->philo->turn == 0)
+		{
+			if (ft_waiter(plist, thread, 20) == 0)
+				return (NULL);
+			plist->philo->turn = 1;
+		}
+		pthread_mutex_lock(&turn);
+		ft_take_leftfork(plist);
+		ft_take_rightfork(plist);
+		pthread_mutex_unlock(&turn);
 		if (ft_waiter(plist, thread, 10) == 0)
 			return (NULL);
 	}
-	pthread_mutex_unlock(&my_turn);
-	pthread_mutex_lock(&my_turn);
-	while (ft_take_rightfork(plist) == 0)
-	{
-		pthread_mutex_unlock(&my_turn);
-		if (ft_waiter(plist, thread, 10) == 0)
-			return (NULL);
-	}
-	pthread_mutex_unlock(&my_turn);
 	ft_eat(plist);
 	return (NULL);
 }
@@ -51,9 +50,11 @@ void	*ft_eat(void *thread)
 	pthread_mutex_lock(&plist->philo->right_fork->mutex_fork);
 	plist->philo->right_fork->taken--;
 	pthread_mutex_unlock(&plist->philo->right_fork->mutex_fork);
+	plist->philo->forks_taken--;
 	pthread_mutex_lock(&plist->prev->philo->right_fork->mutex_fork);
 	plist->prev->philo->right_fork->taken--;
 	pthread_mutex_unlock(&plist->prev->philo->right_fork->mutex_fork);
+	plist->philo->forks_taken--;
 	ft_sleep(plist);
 	return (NULL);
 }

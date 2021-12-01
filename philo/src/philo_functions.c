@@ -31,35 +31,6 @@ int	ft_eatchecker(t_philist *plist)
 	return (1);
 }
 
-int	ft_finisher(t_philist *plist, pthread_t philo)
-{
-	t_philist	*p_init;
-
-	p_init = plist;
-	while (1)
-	{
-		usleep(1000);
-		if (p_init->philo->dead == 1)
-		{
-			pthread_detach(philo);
-			return (0);
-		}
-		p_init = p_init->next;
-		while (p_init->philo->number != plist->philo->number)
-		{
-			if (p_init->philo->dead == 1)
-			{
-				pthread_detach(philo);
-				return (0);
-			}
-			p_init = p_init->next;
-		}
-		if (ft_eatchecker(plist) == 1)
-			return (0);
-	}
-	return (1);
-}
-
 int	ft_killp(t_philist *plist, pthread_t philo)
 {
 	if (*plist->philo->time_left
@@ -74,6 +45,54 @@ int	ft_killp(t_philist *plist, pthread_t philo)
 	return (0);
 }
 
+/*int	ft_take_oddleftfork(t_philist *plist)
+{
+	pthread_mutex_lock(&plist->prev->philo->right_fork->mutex_fork);
+	pthread_mutex_lock(&plist->philo->right_fork->mutex_fork);
+	if (plist->prev->philo->right_fork->taken == 0
+		&& plist->philo->right_fork->taken)
+	{
+		ft_printer(plist, "\033[0;32mPhilosopher", "has taken a fork 🍴", 0);
+		plist->prev->philo->right_fork->taken++;
+		pthread_mutex_unlock(&plist->prev->philo->right_fork->mutex_fork);
+		pthread_mutex_unlock(&plist->philo->right_fork->mutex_fork);
+		return (1);
+	}
+	if (plist->prev->philo->right_fork->taken == 0)
+	{
+		ft_printer(plist, "\033[0;32mPhilosopher", "has taken a fork 🍴", 0);
+		plist->prev->philo->right_fork->taken++;
+		pthread_mutex_unlock(&plist->prev->philo->right_fork->mutex_fork);
+		pthread_mutex_unlock(&plist->philo->right_fork->mutex_fork);
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_take_leftfork(t_philist *plist)
+{
+	if (plist->philo->odd == 1)
+	{
+		if (ft_take_oddleftfork(plist) == 1)
+			return (1);
+	}
+	else
+	{
+		if (plist->prev->philo->right_fork->taken == 0
+			&& plist->philo->right_fork->taken == 0)
+		{
+			ft_printer(plist, "\033[0;32mPhilosopher", "has taken a fork 🍴", 0);
+			plist->prev->philo->right_fork->taken++;
+			pthread_mutex_unlock(&plist->philo->right_fork->mutex_fork);
+			pthread_mutex_unlock(&plist->prev->philo->right_fork->mutex_fork);
+			return (1);
+		}
+	}
+	pthread_mutex_unlock(&plist->philo->right_fork->mutex_fork);
+	pthread_mutex_unlock(&plist->prev->philo->right_fork->mutex_fork);
+	return (0);
+}*/
+
 int	ft_take_leftfork(t_philist *plist)
 {
 	pthread_mutex_lock(&plist->prev->philo->right_fork->mutex_fork);
@@ -81,6 +100,7 @@ int	ft_take_leftfork(t_philist *plist)
 	{
 		ft_printer(plist, "\033[0;32mPhilosopher", "has taken a fork 🍴", 0);
 		plist->prev->philo->right_fork->taken++;
+		plist->philo->forks_taken++;
 		pthread_mutex_unlock(&plist->prev->philo->right_fork->mutex_fork);
 		return (1);
 	}
@@ -95,6 +115,7 @@ int	ft_take_rightfork(t_philist *plist)
 	{
 		ft_printer(plist, "\033[0;32mPhilosopher", "has taken a fork 🍴", 0);
 		plist->philo->right_fork->taken++;
+		plist->philo->forks_taken++;
 		pthread_mutex_unlock(&plist->philo->right_fork->mutex_fork);
 		return (1);
 	}

@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 19:43:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/30 14:55:57 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/12/01 12:53:15 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ t_philo	*create_phil(char **argv)
 		return (NULL);
 	philo->right_fork = create_fork();
 	philo->time_to_die = ft_atoi(argv[2]);
+	philo->turn = 0;
 	philo->count = 0;
+	philo->forks_taken = 0;
 	philo->time_left = &philo->count;
 	philo->time_to_eat = ft_atoi(argv[3]);
 	philo->time_to_sleep = ft_atoi(argv[4]);
@@ -88,31 +90,31 @@ t_philist	*create_plist(char **argv, int size)
 	return (list);
 }
 
-void	print_plist(t_philist *plist, int size)
+int	ft_finisher(t_philist *plist, pthread_t philo)
 {
-	int			i;
-	t_philist	*aux;
+	t_philist	*p_init;
 
-	i = 0;
-	aux = plist;
-	printf("\n");
-	printf("\033[0;31m%65s", " 📚 philo 📚 ");
-	printf("\n");
-	printf("\033[0;31m%57s", "------------\n");
-	while (i < size)
+	p_init = plist;
+	while (1)
 	{
-		printf("\033[0mphilo %-3i", i + 1);
-		printf("\033[0;32mnumber: \033[0m%-3i",
-			aux->philo->number);
-		printf("\033[0;35mtime to die: \033[0m[%d] ",
-			aux->philo->time_to_die);
-		printf("\033[0;33mtime to eat: \033[0m[%i] ",
-			aux->philo->time_to_eat);
-		printf("\033[0;34mtime to sleep: \033[0m[%i] ",
-			aux->philo->time_to_sleep);
-		printf("\033[0;36mnumber of times to eat: \033[0m[%i]\n ",
-			aux->philo->number_of_times_toeat);
-		aux = aux->next;
-		i++;
+		usleep(1000);
+		if (p_init->philo->dead == 1)
+		{
+			pthread_detach(philo);
+			return (0);
+		}
+		p_init = p_init->next;
+		while (p_init->philo->number != plist->philo->number)
+		{
+			if (p_init->philo->dead == 1)
+			{
+				pthread_detach(philo);
+				return (0);
+			}
+			p_init = p_init->next;
+		}
+		if (ft_eatchecker(plist) == 1)
+			return (0);
 	}
+	return (1);
 }

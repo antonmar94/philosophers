@@ -6,7 +6,7 @@
 /*   By: antonmar <antonmar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 10:19:05 by antonmar          #+#    #+#             */
-/*   Updated: 2021/11/30 14:55:25 by antonmar         ###   ########.fr       */
+/*   Updated: 2021/12/01 13:50:27 by antonmar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ typedef struct fork
 
 typedef struct philo
 {
+	int				turn;
 	int				number;
 	int				numeat;
 	t_fork			*right_fork;
+	int				forks_taken;
 	int				dead;
 	int				time_to_die;
 	time_t			start;
@@ -70,5 +72,6 @@ int			ft_finisher(t_philist *plist, pthread_t philo);
 int			ft_killp(t_philist *plist, pthread_t philo);
 int			ft_take_leftfork(t_philist *plist);
 int			ft_take_rightfork(t_philist *plist);
+int			ft_take_oddleftfork(t_philist *plist);
 
 #endif        
